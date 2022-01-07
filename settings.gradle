@@ -3,4 +3,5 @@ include 'form-based-auth'
 include 'basic-auth'
 include 'cassandra'
 include 'authorisation'
+include 'authorisation-with-annotations'
 

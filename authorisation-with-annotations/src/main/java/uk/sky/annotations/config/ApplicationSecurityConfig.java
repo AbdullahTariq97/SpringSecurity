@@ -1,9 +1,10 @@
-package uk.sky.authorisation.config;
+package uk.sky.annotations.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -12,14 +13,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import uk.sky.authorisation.enums.ApplicationUserPermission;
-import uk.sky.authorisation.enums.ApplicationUserRole;
-import uk.sky.authorisation.models.AuthEntryPoint;
+import uk.sky.annotations.enums.ApplicationUserPermission;
+import uk.sky.annotations.enums.ApplicationUserRole;
+import uk.sky.annotations.models.AuthEntryPoint;
 
 // We need to add the @EnableWebSecurity annotation this class
 // Also need to extends abstract class WebSecurityConfigureAdapter
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -32,14 +34,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         this.passwordEncoder = passwordEncoder;
     }
 
-//     we can choose to overide a number of method from web security configurer adapter
-//     authorizeRequests() : authorises requests
-//     anyRequest() : all requests must be authenticated
-//     httpBasic() : mechanism used to check the autheticity of a client is basic authenticaton
-//     antMatchers().permitAll() : allows us to exclude authenticity check on subset of API's
-//     added a second ant matcher  .antMatchers("/private/**").hasRole(ApplicationUserRole.ADMIN.name())
-//     the above has assigned a role for a url matching the pattern in the antMatcher
-//     spring security will check if the user and pass match up to user with role of admin
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -47,14 +41,14 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 // pemitting requests matching this pattern
                 .authorizeRequests().antMatchers("/").permitAll()
                 // to access get method you need to have specific role
-                .antMatchers(HttpMethod.GET,"/patient/**").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.TRAINEE_ADMIN.name())
-                .antMatchers(HttpMethod.DELETE,"/patient/**").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.TRAINEE_ADMIN.name())
-                .antMatchers(HttpMethod.POST,"/patient/**").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.TRAINEE_ADMIN.name())
-                .antMatchers(HttpMethod.PUT,"/patient/**").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.TRAINEE_ADMIN.name())
-                // to access delete, post and put you need specific authority
-                .antMatchers(HttpMethod.DELETE, "/patient/**").hasAuthority(ApplicationUserPermission.PATIENT_WRITE.getPermission())
-                .antMatchers(HttpMethod.POST, "/patient/**").hasAuthority(ApplicationUserPermission.PATIENT_WRITE.getPermission())
-                .antMatchers(HttpMethod.PUT, "/patient/**").hasAuthority(ApplicationUserPermission.PATIENT_WRITE.getPermission())
+//                .antMatchers(HttpMethod.GET,"/patient/**").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.TRAINEE_ADMIN.name())
+//                .antMatchers(HttpMethod.DELETE,"/patient/**").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.TRAINEE_ADMIN.name())
+//                .antMatchers(HttpMethod.POST,"/patient/**").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.TRAINEE_ADMIN.name())
+//                .antMatchers(HttpMethod.PUT,"/patient/**").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.TRAINEE_ADMIN.name())
+//                // to access delete, post and put you need specific authority
+//                .antMatchers(HttpMethod.DELETE, "/patient/**").hasAuthority(ApplicationUserPermission.PATIENT_WRITE.getPermission())
+//                .antMatchers(HttpMethod.POST, "/patient/**").hasAuthority(ApplicationUserPermission.PATIENT_WRITE.getPermission())
+//                .antMatchers(HttpMethod.PUT, "/patient/**").hasAuthority(ApplicationUserPermission.PATIENT_WRITE.getPermission())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -69,7 +63,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetails annaSmithUser = User.builder()
                 .username("annasmith")
                 .password(passwordEncoder.encode("password"))
-                .roles(ApplicationUserRole.STUDENT.name()).build();
+                .roles(ApplicationUserRole.STUDENT.name())
+                .build();
 
         UserDetails  admin = User.builder().username("linda")
                 .password(passwordEncoder.encode("password123"))
