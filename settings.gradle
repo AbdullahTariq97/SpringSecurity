@@ -1,0 +1,6 @@
+rootProject.name = 'SpringSecurity'
+include 'form-based-auth'
+include 'basic-auth'
+include 'cassandra'
+include 'authorisation'
+

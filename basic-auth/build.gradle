@@ -1,0 +1,43 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.2'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+
+
+//    // This gives you the cassandra repository class
+	implementation 'com.datastax.cassandra:cassandra-driver-core:3.11.0'
+//
+	implementation 'org.springframework.data:spring-data-cassandra:2.2.10.RELEASE'
+// Why do we have to add this to avoid Caused by: java.lang.ClassNotFoundException: com.codahale.metrics.JmxReporter
+	implementation 'com.codahale.metrics:metrics-core:3.0.2'
+}
+
+test {
+	useJUnitPlatform()
+}

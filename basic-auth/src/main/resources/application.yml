@@ -1,0 +1,10 @@
+spring:
+  data:
+    cassandra:
+      port: 9042
+      contact-points: 127.0.0.1
+      keyspace-name: security
+#  security:
+#    user:
+#      name: username
+#      password: password
