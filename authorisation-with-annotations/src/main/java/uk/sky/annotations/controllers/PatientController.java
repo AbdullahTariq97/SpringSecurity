@@ -7,7 +7,7 @@ import uk.sky.annotations.models.Patient;
 import java.util.List;
 
 // both admin and trainee admin have permissions to access this api because of their role
-// however admin has use read,write,delete, create and post http opertions but the trainee can only do read operation
+// however admin has use read,write,delete, create and post http operations but the trainee can only do read operation
 
 @RestController
 @RequestMapping("/patient/info")

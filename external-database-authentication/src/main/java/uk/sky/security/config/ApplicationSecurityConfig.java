@@ -18,13 +18,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // Adding identity store of users using cassandra database
-    // un-comment cassandra config and repo
-
     @Autowired
     private UserDetailsService userDetailsService;
 
 
-    // This method can be overriden to configure the blacklisting or whitelisting of endpoints
+    // This method can be overridden to configure the blacklisting or whitelisting of endpoints
     // and for affecting the Authorization (roles and responsibilities)
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -33,16 +31,16 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().httpBasic();
     }
 
-    // Step 3 - A bean for a password encoder needs to be provided to spring security
+    // A bean for a password encoder needs to be provided to spring security
     @Bean
     public PasswordEncoder getPasswordEncoder(){
         return NoOpPasswordEncoder.getInstance();
     }
 
 
-    // Step 1: override the configure method that accepts AuthenticationManagerBuilder
-    //         - Need to affect the authManBuilder by passing an object of type UserDetailsService to it
-    //         - UserDetailsService is an interface that needs to be implemented
+    // override the configure method that accepts AuthenticationManagerBuilder
+    // - Need to affect the AuthenticationManagerBuilder by passing an object of type UserDetailsService to it
+    // - UserDetailsService is an interface that needs to be implemented
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService);

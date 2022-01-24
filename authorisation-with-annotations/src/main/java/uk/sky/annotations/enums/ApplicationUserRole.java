@@ -6,7 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-// When ApplicationUserRole.User -> constructor gets called. Values in () are passed as arguments to the construtor and set
+// When ApplicationUserRole.User -> constructor gets called. Values in () are passed as arguments to the constructor and set
 public enum ApplicationUserRole {
 
     STUDENT(Sets.newHashSet()),

@@ -4,4 +4,7 @@ include 'basic-auth'
 include 'cassandra'
 include 'authorisation'
 include 'authorisation-with-annotations'
+include 'default-authentication'
+include 'in-memory-authentication-and-authorisation'
+include 'external-database-authentication'
 

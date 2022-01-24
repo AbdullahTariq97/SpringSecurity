@@ -22,6 +22,8 @@ import uk.sky.authorisation.models.AuthEntryPoint;
 @EnableWebSecurity
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    // This class has super class AuthenticationEntryPoint
+    // Object of this type needs to be passed to .authenticationEntryPoint method to affect authentication failure response
     @Autowired
     private AuthEntryPoint authEntryPoint;
 
@@ -32,10 +34,10 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         this.passwordEncoder = passwordEncoder;
     }
 
-//     we can choose to overide a number of method from web security configurer adapter
+//     we can choose to override a number of method from web security configure adapter
 //     authorizeRequests() : authorises requests
 //     anyRequest() : all requests must be authenticated
-//     httpBasic() : mechanism used to check the autheticity of a client is basic authenticaton
+//     httpBasic() : mechanism used to check the authenticity of a client is basic authentication
 //     antMatchers().permitAll() : allows us to exclude authenticity check on subset of API's
 //     added a second ant matcher  .antMatchers("/private/**").hasRole(ApplicationUserRole.ADMIN.name())
 //     the above has assigned a role for a url matching the pattern in the antMatcher
@@ -43,8 +45,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.csrf().disable() // TODO: this will be explained in later section
-                // pemitting requests matching this pattern
+        http.csrf().disable()
+                // permitting requests matching this pattern
                 .authorizeRequests().antMatchers("/").permitAll()
                 // to access get method you need to have specific role
                 .antMatchers(HttpMethod.GET,"/patient/**").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.TRAINEE_ADMIN.name())

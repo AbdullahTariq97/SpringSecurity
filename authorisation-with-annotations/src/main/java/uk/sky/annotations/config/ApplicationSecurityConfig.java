@@ -3,7 +3,6 @@ package uk.sky.annotations.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,9 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import uk.sky.annotations.enums.ApplicationUserPermission;
 import uk.sky.annotations.enums.ApplicationUserRole;
-import uk.sky.annotations.models.AuthEntryPoint;
 
 // We need to add the @EnableWebSecurity annotation this class
 // Also need to extends abstract class WebSecurityConfigureAdapter
@@ -24,11 +21,10 @@ import uk.sky.annotations.models.AuthEntryPoint;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private AuthEntryPoint authEntryPoint;
-
     private final PasswordEncoder passwordEncoder;
 
+    // When creating user to store in in-memory database. Passwords much be encoded using encoder
+    // PasswordEncoder interface implemented and injected
     @Autowired
     public ApplicationSecurityConfig(PasswordEncoder passwordEncoder){
         this.passwordEncoder = passwordEncoder;
@@ -37,8 +33,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.csrf().disable() // TODO: this will be explained in later section
-                // pemitting requests matching this pattern
+        http.csrf().disable()
                 .authorizeRequests().antMatchers("/").permitAll()
                 // to access get method you need to have specific role
 //                .antMatchers(HttpMethod.GET,"/patient/**").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.TRAINEE_ADMIN.name())
@@ -52,8 +47,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .httpBasic()
-                .authenticationEntryPoint(authEntryPoint);
+                .httpBasic();
     }
 
     @Override
